@@ -68,11 +68,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les clients
   useEffect(() => {
     fetchData(
-<<<<<<< HEAD
       "https://backendrafik.onrender.com/ClientAll", // Replace with actual endpoint if different
-=======
-      "https://api.trendybox-dz.com/ClientAll",
->>>>>>> 446b95634d54c762883d5ba4e3bd88e3bf0a1d74
       setClients,
       "Erreur lors de la récupération des clients."
     );
@@ -81,7 +77,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les fournisseurs
   useEffect(() => {
     fetchData(
-      "https://api.trendybox-dz.com/Fournisseurs",
+      "https://backendrafik.onrender.com/Fournisseurs",
       setFournisseurs,
       "Erreur lors de la récupération des fournisseurs."
     );
