@@ -41,7 +41,7 @@ const AjouterFour = ({ fetchData }) => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("https://api.trendybox-dz.com/Fournisseurs", {
+      const response = await fetch("https://backendrafik.onrender.com/Fournisseurs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const AjouterFour = ({ fetchData }) => {
         // Recharger les données via fetchData si fourni
         if (fetchData) {
           fetchData(
-            "https://api.trendybox-dz.com/Fournisseurs",
+            "https://backendrafik.onrender.com/Fournisseurs",
             (data) => data.data,
             "Erreur lors de la récupération des fournisseurs."
           );

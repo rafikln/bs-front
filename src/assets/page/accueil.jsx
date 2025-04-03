@@ -68,7 +68,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les clients
   useEffect(() => {
     fetchData(
-      "https://backendrafik.onrender.com/ClientAll", // Replace with actual endpoint if different
+      "https://backendrafik.onrender.com/clients", // Replace with actual endpoint if different
       setClients,
       "Erreur lors de la récupération des clients."
     );

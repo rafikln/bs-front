@@ -40,7 +40,7 @@ const AjouterClient = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("https://backendrafik.onrender.com/Client", {
+      const response = await fetch("https://backendrafik.onrender.com/clients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

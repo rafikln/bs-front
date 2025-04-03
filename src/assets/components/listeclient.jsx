@@ -12,11 +12,11 @@ const Confirmedelete = ({ isConfirmModalOpen, handleDeleteClient, handleCancelDe
         <div
           id="popup-modal"
           className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
-          onClick={handleCancelDelete} // Ferme la modale en cliquant à l'extérieur
+          onClick={handleCancelDelete}
         >
           <div
             className="relative bg-white rounded-lg shadow dark:bg-gray-700 p-4 max-w-md w-full"
-            onClick={(e) => e.stopPropagation()} // Empêche la fermeture en cliquant à l'intérieur
+            onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-[20px] font-normal text-gray-500 dark:text-gray-400 text-center">
               Êtes-vous sûr de vouloir supprimer ce client : {selectedClient?.nom} ?
@@ -44,7 +44,7 @@ const Confirmedelete = ({ isConfirmModalOpen, handleDeleteClient, handleCancelDe
 
 const ListeClient = () => {
   const [clients, setClients] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // Ajout pour la recherche
+  const [searchTerm, setSearchTerm] = useState("");
   const [isShowModalOpen, setIsShowModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -57,21 +57,18 @@ const ListeClient = () => {
       const response = await fetch("https://backendrafik.onrender.com/clients");
       if (response.ok) {
         const data = await response.json();
-        setClients(data.data); // Les données sont dans data.data selon votre API
+        setClients(data.data);
       } else {
-        toast.error("Erreur lors de la récupération des clients.");
       }
     } catch (error) {
       toast.error("Erreur serveur.");
     }
   };
 
-  // Charger les clients au montage du composant
   useEffect(() => {
     fetchClients();
   }, []);
 
-  // Filtrer les clients en fonction du terme de recherche
   const filteredClients = clients.filter((client) =>
     client.nom.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -115,27 +112,30 @@ const ListeClient = () => {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://backendrafik.onrender.com/client/${updatedClient.id}`, {
+      const response = await fetch(`https://backendrafik.onrender.com/clients/${updatedClient.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(updatedClient)
       });
 
       if (response.ok) {
         const result = await response.json();
         setClients((prevClients) =>
           prevClients.map((client) =>
-            client.id === updatedClient.id ? result.data : client
+            client.id === updatedClient.id ? { ...client, ...result.data } : client
           )
         );
         toast.success("Client mis à jour avec succès !");
         handleCloseUpdateModal();
       } else {
-        toast.error("Erreur lors de la mise à jour du client.");
+        const errorData = await response.json();
+        toast.error(errorData.message || "Erreur lors de la mise à jour du client.");
       }
     } catch (error) {
-      toast.error("Erreur serveur.");
+      console.error("Erreur lors de la mise à jour:", error);
+      toast.error("Erreur serveur lors de la mise à jour.");
     }
   };
 
@@ -143,7 +143,7 @@ const ListeClient = () => {
   const handleDeleteClient = async () => {
     if (selectedClient) {
       try {
-        const response = await fetch(`https://backendrafik.onrender.com/Client/${selectedClient.id}`, {
+        const response = await fetch(`https://backendrafik.onrender.com/Clients/${selectedClient.id}`, {
           method: "DELETE",
         });
 

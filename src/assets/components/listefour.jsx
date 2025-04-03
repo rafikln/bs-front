@@ -53,7 +53,7 @@ const ListeFour = ({ fournisseurs, setFournisseurs }) => {
   // Récupérer les fournisseurs depuis l'API
   const fetchFournisseurs = async () => {
     try {
-      const response = await fetch("https://api.trendybox-dz.com/Fournisseurs"); // Endpoint corrigé
+      const response = await fetch("https://backendrafik.onrender.com/Fournisseurs"); // Endpoint corrigé
       if (response.ok) {
         const data = await response.json();
         setFournisseurs(data.data);
@@ -111,7 +111,7 @@ const ListeFour = ({ fournisseurs, setFournisseurs }) => {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://api.trendybox-dz.com/Fournisseurs/${updatedFournisseur.id}`, {
+      const response = await fetch(`https://backendrafik.onrender.com/Fournisseurs/${updatedFournisseur.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ const ListeFour = ({ fournisseurs, setFournisseurs }) => {
   const handleDeleteFournisseur = async () => {
     if (selectedFournisseur) {
       try {
-        const response = await fetch(`https://api.trendybox-dz.com/Fournisseurs/${selectedFournisseur.id}`, {
+        const response = await fetch(`https://backendrafik.onrender.com/Fournisseurs/${selectedFournisseur.id}`, {
           method: "DELETE",
         });
 
