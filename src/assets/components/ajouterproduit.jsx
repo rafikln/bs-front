@@ -11,18 +11,36 @@ const AjouterProduit = () => {
     reference: "",
     images: [],
     categorie_id: "",
+    fournisseur: "", // New field
+    client: "",      // New field
+    etat: "local"    // New field with default value
   });
 
-  const [categories, setCategories] = useState([]);
+  // Static options for etat select
+  const etatOptions = [
+    { value: "importation", label: "Importation" },
+    { value: "local", label: "Local" }
+  ];
   const [imagePreviews, setImagePreviews] = useState([]);
 
+  //categories filter
+  
+  const [categories, setCategories] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [categorySearch, setCategorySearch] = useState("");
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("https://api.trendybox-dz.com/CategorieAll");
         if (response.ok) {
           const data = await response.json();
-          setCategories(data.data);
+          // Sort categories alphabetically by name
+          const sortedCategories = data.data.sort((a, b) => 
+            a.nom.localeCompare(b.nom, 'fr', { sensitivity: 'base' })
+          );
+          setCategories(sortedCategories);
+          setFilteredCategories(sortedCategories);
         }
       } catch (error) {
         toast.error("Erreur lors de la récupération des catégories.");
@@ -30,6 +48,27 @@ const AjouterProduit = () => {
     };
     fetchCategories();
   }, []);
+
+    // Filter categories based on search input
+    useEffect(() => {
+      if (categorySearch.trim() === "") {
+        setFilteredCategories(categories);
+      } else {
+        const filtered = categories.filter(category =>
+          category.nom.toLowerCase().includes(categorySearch.toLowerCase())
+        );
+        setFilteredCategories(filtered);
+      }
+    }, [categorySearch, categories]);
+  
+    const handleCategorySelect = (categoryId, categoryName) => {
+      setProduit(prev => ({
+        ...prev,
+        categorie_id: categoryId
+      }));
+      setCategorySearch(categoryName);
+      setIsCategoryDropdownOpen(false);
+    };
 
   const handleChange = (event) => {
     const { id, value } = event.target;
@@ -63,62 +102,61 @@ const AjouterProduit = () => {
   };
 
   const validateForm = () => {
-  
     return true;
   };
 
   const handleSubmit = async (event) => {
-    
     event.preventDefault();
     if (!validateForm()) return;
 
-
     try {
-        const formData = new FormData();
-        formData.append("nom", produit.nom.trim());
-        formData.append("description", produit.description.trim());
-        formData.append("prix_vente", produit.prix_vente);
-        formData.append("prix_achat", produit.prix_achat);
-        formData.append("quantite", produit.quantite);
-        formData.append("reference", produit.reference.trim());
-        formData.append("categorie_id", produit.categorie_id);
+      const formData = new FormData();
+      formData.append("nom", produit.nom.trim());
+      formData.append("description", produit.description.trim());
+      formData.append("prix_vente", produit.prix_vente);
+      formData.append("prix_achat", produit.prix_achat);
+      formData.append("quantite", produit.quantite);
+      formData.append("reference", produit.reference.trim());
+      formData.append("categorie_id", produit.categorie_id);
+      formData.append("fournisseur", produit.fournisseur.trim()); // Add fournisseur
+      formData.append("client", produit.client.trim());           // Add client
+      formData.append("etat", produit.etat);                     // Add etat
 
-        // Renommer et ajouter les images
-        produit.images.forEach((image, index) => {
-            const newName = `${produit.nom.replace(/\s+/g, '_')}_${index}_${Date.now()}_${image.name}`;
-            const newImage = new File([image], newName, { type: image.type });
-            formData.append("images", newImage);
-        });
+      // Renommer et ajouter les images
+      produit.images.forEach((image, index) => {
+        const newName = `${produit.nom.replace(/\s+/g, '_')}_${index}_${Date.now()}_${image.name}`;
+        const newImage = new File([image], newName, { type: image.type });
+        formData.append("images", newImage);
+      });
 
-        const response = await fetch("https://api.trendybox-dz.com/ProduitSave", {
-            method: "POST",
-            body: formData, 
-        });
+      const response = await fetch("https://api.trendybox-dz.com/ProduitSave", {
+        method: "POST",
+        body: formData, 
+      });
 
-        if (!response.ok) {
-            throw new Error("Erreur lors de l'ajout du produit");
-        }
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'ajout du produit");
+      }
 
-        setProduit({
-            nom: "",
-            description: "",
-            prix_vente: "",
-            prix_achat: "",
-            quantite: "",
-            reference: "",
-            images: [],
-            categorie_id: "",
-        });
-        setImagePreviews([]);
-        toast.success("Produit ajouté avec succès !");
+      setProduit({
+        nom: "",
+        description: "",
+        prix_vente: "",
+        prix_achat: "",
+        quantite: "",
+        reference: "",
+        images: [],
+        categorie_id: "",
+        fournisseur: "", // Reset fournisseur
+        client: "",     // Reset client
+        etat: "local"   // Reset etat to default
+      });
+      setImagePreviews([]);
+      toast.success("Produit ajouté avec succès !");
     } catch (error) {
-        toast.error(error.message || "Erreur de connexion au serveur.");
-    } finally {
-        setIsLoading(false); // Fin du chargement
+      toast.error(error.message || "Erreur de connexion au serveur.");
     }
-};
-
-
+  };
 
   return (
     <>
@@ -154,28 +192,48 @@ const AjouterProduit = () => {
             </div>
   
             {/* Catégorie */}
-            <div>
-              <label htmlFor="categorie_id" className="block mb-2 text-sm font-medium text-gray-900">
-                Catégorie
-              </label>
-              <select
-  id="categorie_id"
-  value={produit.categorie_id}
-  onChange={handleChange}
-  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-  required
->
-  <option value="" disabled>
-    Sélectionner une catégorie
-  </option>
-  {categories.map((item) => (
-    <option key={item.id} value={item.id}>
-      {item.nom}
-    </option>
-  ))}
-</select>
-
+            <div className="relative">
+        <label htmlFor="categorySearch" className="block mb-2 text-sm font-medium text-gray-900">
+          Catégorie
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            id="categorySearch"
+            value={categorySearch}
+            onChange={(e) => {
+              setCategorySearch(e.target.value);
+              setIsCategoryDropdownOpen(true);
+            }}
+            onFocus={() => setIsCategoryDropdownOpen(true)}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Rechercher une catégorie"
+            required
+          />
+          <input
+            type="hidden"
+            id="categorie_id"
+            value={produit.categorie_id}
+          />
+          {isCategoryDropdownOpen && (
+            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {filteredCategories.length > 0 ? (
+                filteredCategories.map((item) => (
+                  <div
+                    key={item.id}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleCategorySelect(item.id, item.nom)}
+                  >
+                    {item.nom}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-gray-500">Aucune catégorie trouvée</div>
+              )}
             </div>
+          )}
+        </div>
+      </div>
 
             {/* Description */}
             <div>
@@ -256,40 +314,85 @@ const AjouterProduit = () => {
               />
             </div>
 
-
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Images</label>
-            <input
-              type="file"
-              multiple
-              accept=".png, .jpg, .jpeg"
-              onChange={handleFileChange}
-              className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer"
-            />
-            <div className="mt-2 flex flex-wrap gap-2">
-              {imagePreviews.map((src, index) => (
-                <div key={index} className="relative">
-                  <img src={src} alt="Aperçu" className="w-20 h-20 object-cover rounded-lg shadow-md" />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                    className="absolute top-0 right-0 bg-red-500 w-5 h-5 text-white  rounded-full text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+            {/* Fournisseur */}
+            <div>
+              <label htmlFor="fournisseur" className="block mb-2 text-sm font-medium text-gray-900">
+                Fournisseur
+              </label>
+              <input
+                type="text"
+                id="fournisseur"
+                value={produit.fournisseur}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Nom du fournisseur"
+              />
             </div>
-          </div>
 
-          <button type="submit" className="bg-[#070c2b] hover:bg-[#070c2bc8] text-white w-[160px] px-4 py-2 rounded-lg mt-4 absolute bottom-5 right-12">
-            Ajouter Produit
-          </button>
-          </div>
+            {/* Client */}
+            <div>
+              <label htmlFor="client" className="block mb-2 text-sm font-medium text-gray-900">
+                Client
+              </label>
+              <input
+                type="text"
+                id="client"
+                value={produit.client}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Nom du client"
+              />
+            </div>
 
+            {/* État */}
+            <div>
+              <label htmlFor="etat" className="block mb-2 text-sm font-medium text-gray-900">
+                État
+              </label>
+              <select
+                id="etat"
+                value={produit.etat}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              >
+                {etatOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Images</label>
+              <input
+                type="file"
+                multiple
+                accept=".png, .jpg, .jpeg"
+                onChange={handleFileChange}
+                className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer"
+              />
+              <div className="mt-2 flex flex-wrap gap-2">
+                {imagePreviews.map((src, index) => (
+                  <div key={index} className="relative">
+                    <img src={src} alt="Aperçu" className="w-20 h-20 object-cover rounded-lg shadow-md" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-0 right-0 bg-red-500 w-5 h-5 text-white rounded-full text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button type="submit" className="bg-[#070c2b] hover:bg-[#070c2bc8] text-white w-[160px] px-4 py-2 rounded-lg mt-4 absolute bottom-5 right-12">
+              Ajouter Produit
+            </button>
+          </div>
         </form>
-        
       </div>
     </>
   );
