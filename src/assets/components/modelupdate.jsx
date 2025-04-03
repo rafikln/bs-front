@@ -33,7 +33,7 @@ const ModelUpdate = ({
     setError(false);
 
     try {
-      const response = await fetch(`https://api.trendybox-dz.com/CategorieEdit/${selectedCategory.id}`, {
+      const response = await fetch(`https://backendrafik.onrender.com/CategorieEdit/${selectedCategory.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -15,7 +15,7 @@ const AjouterCat = ({fetchData}) => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.trendybox-dz.com/CategorieSave', {
+      const response = await fetch('https://backendrafik.onrender.com/CategorieSave', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

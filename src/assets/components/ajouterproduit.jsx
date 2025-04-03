@@ -38,7 +38,7 @@ const AjouterProduit = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("https://api.trendybox-dz.com/CategorieAll");
+        const response = await fetch("https://backendrafik.onrender.com/CategorieAll");
         if (response.ok) {
           const data = await response.json();
           // Sort categories alphabetically by name
@@ -59,7 +59,7 @@ const AjouterProduit = () => {
   useEffect(() => {
     const fetchFournisseurs = async () => {
       try {
-        const response = await fetch("https://api.trendybox-dz.com/fournisseurs");
+        const response = await fetch("https://backendrafik.onrender.com/fournisseurs");
         if (response.ok) {
           const data = await response.json();
           const sortedFournisseurs = data.data.sort((a, b) => 
@@ -177,7 +177,7 @@ const AjouterProduit = () => {
         formData.append("images", newImage);
       });
 
-      const response = await fetch("https://api.trendybox-dz.com/ProduitSave", {
+      const response = await fetch("https://backendrafik.onrender.com/ProduitSave", {
         method: "POST",
         body: formData, 
       });
@@ -195,7 +195,7 @@ const AjouterProduit = () => {
         reference: "",
         images: [],
         categorie_id: "",
-        fournisseur: "", // Reset fournisseur
+        fournisseur_id: "", // Reset fournisseur
         etat: "local"   // Reset etat to default
       });
       setImagePreviews([]);

@@ -63,7 +63,7 @@ const ModelShowProduit = ({ isModalOpen, selectedProduct, handleCloseModal }) =>
                   }`}
                 >
                   <img
-                    src={`https://api.trendybox-dz.com${img}`}
+                    src={`https://backendrafik.onrender.com${img}`}
                     className="  object-cover rounded-lg w-[40%]"
                     alt={`Image ${index + 1}`}
                   />

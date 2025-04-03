@@ -23,7 +23,7 @@ const ListeFacture = () => {
   useEffect(() => {
     const fetchFactures = async () => {
       try {
-        const response = await fetch("https://api.trendybox-dz.com/FacturesAll");
+        const response = await fetch("https://backendrafik.onrender.com/FacturesAll");
         if (!response.ok) {
           throw new Error("Erreur lors de la récupération des données");
         }
@@ -71,7 +71,7 @@ const ListeFacture = () => {
     try {
         console.log("Tentative de suppression de la facture avec ID :", deleteFactureId);
   
-        const response = await fetch(`https://api.trendybox-dz.com/factures/${deleteFactureId}`, {
+        const response = await fetch(`https://backendrafik.onrender.com/factures/${deleteFactureId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

@@ -25,8 +25,8 @@ const AjouterFacture = () => {
       }
     };
 
-    fetchData("https://api.trendybox-dz.com/CategorieAll", setCategories, "Erreur lors de la récupération des catégories.");
-    fetchData("https://api.trendybox-dz.com/ProduitAll", setProduitsDisponibles, "Erreur lors de la récupération des produits.");
+    fetchData("https://backendrafik.onrender.com/CategorieAll", setCategories, "Erreur lors de la récupération des catégories.");
+    fetchData("https://backendrafik.onrender.com/ProduitAll", setProduitsDisponibles, "Erreur lors de la récupération des produits.");
   }, []);
 
   // Recalculer le prix total
@@ -88,7 +88,7 @@ const filteredProduits = produitsDisponibles.filter((prod) => {
   
     try {
       // Soumettre la facture à l'API
-      const response = await fetch("https://api.trendybox-dz.com/FactureSave", {
+      const response = await fetch("https://backendrafik.onrender.com/FactureSave", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -107,7 +107,7 @@ const filteredProduits = produitsDisponibles.filter((prod) => {
       // Appeler l'API pour récupérer les produits mis à jour
       const fetchData = async () => {
         try {
-          const response = await fetch("https://api.trendybox-dz.com/ProduitAll");
+          const response = await fetch("https://backendrafik.onrender.com/ProduitAll");
           if (response.ok) {
             const data = await response.json();
             setProduitsDisponibles(data.data); // Mettre à jour les produits disponibles
@@ -171,7 +171,7 @@ const filteredProduits = produitsDisponibles.filter((prod) => {
               <img
 src={(() => {
   try {
-    return prod.image ? `https://api.trendybox-dz.com${JSON.parse(prod.image)[0]}` : "";
+    return prod.image ? `https://backendrafik.onrender.com${JSON.parse(prod.image)[0]}` : "";
   } catch {
     return "";
   }

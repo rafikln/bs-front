@@ -47,7 +47,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les catégories
   useEffect(() => {
     fetchData(
-      "https://api.trendybox-dz.com/CategorieAll",
+      "https://backendrafik.onrender.com/CategorieAll",
       setListe,
       "Erreur lors de la récupération des catégories."
     );
@@ -56,7 +56,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les produits
   useEffect(() => {
     fetchData(
-      "https://api.trendybox-dz.com/ProduitAll",
+      "https://backendrafik.onrender.com/ProduitAll",
       setListeproduit,
       "Erreur lors de la récupération des produits."
     );
@@ -65,7 +65,7 @@ function Accueil({ tokens, setTokens }) {
   // Charger les clients
   useEffect(() => {
     fetchData(
-      "https://api.trendybox-dz.com/ClientAll", // Replace with actual endpoint if different
+      "https://backendrafik.onrender.com/ClientAll", // Replace with actual endpoint if different
       setClients,
       "Erreur lors de la récupération des clients."
     );

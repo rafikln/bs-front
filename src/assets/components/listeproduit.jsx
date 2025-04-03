@@ -17,7 +17,7 @@ const ListeProduit = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const fetchProduits = async () => {
     try {
-      const response = await fetch("https://api.trendybox-dz.com/ProduitAll");
+      const response = await fetch("https://backendrafik.onrender.com/ProduitAll");
       if (response.ok) {
         const data = await response.json();
         setProduits(data.data);
@@ -77,7 +77,7 @@ const ListeProduit = () => {
   // Confirmer la suppression
   const handleDeleteCategory = async () => {
     try {
-      const response = await fetch(`https://api.trendybox-dz.com//ProduitDelete/${selectedProductId}`, {
+      const response = await fetch(`https://backendrafik.onrender.com//ProduitDelete/${selectedProductId}`, {
         method: "DELETE",
       });
 
@@ -145,7 +145,7 @@ const ListeProduit = () => {
                   <img
   src={(() => {
     try {
-      return produit.image ? `https://api.trendybox-dz.com${JSON.parse(produit.image)[0]}` : "";
+      return produit.image ? `https://backendrafik.onrender.com${JSON.parse(produit.image)[0]}` : "";
     } catch {
       return "";
     }

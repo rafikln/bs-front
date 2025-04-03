@@ -20,7 +20,7 @@ const ListeCat = () => {
   // Charger les catégories depuis l'API
   const Liste = async () => {
     try {
-      const response = await fetch("https://api.trendybox-dz.com/CategorieAll");
+      const response = await fetch("https://backendrafik.onrender.com/CategorieAll");
       if (response.ok) {
         const data = await response.json();
         setListe(data.data);
@@ -79,7 +79,7 @@ const ListeCat = () => {
     if (!selectedId) return;
 
     try {
-      const response = await fetch(`https://api.trendybox-dz.com/CategorieDelete/${selectedId}`, {
+      const response = await fetch(`https://backendrafik.onrender.com/CategorieDelete/${selectedId}`, {
         method: "DELETE",
       });
 

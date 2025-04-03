@@ -40,7 +40,7 @@ const AjouterClient = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("https://api.trendybox-dz.com/Client", {
+      const response = await fetch("https://backendrafik.onrender.com/Client", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

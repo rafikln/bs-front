@@ -54,7 +54,7 @@ const ListeClient = () => {
   // Récupérer les clients depuis l'API
   const fetchClients = async () => {
     try {
-      const response = await fetch("https://api.trendybox-dz.com/clients");
+      const response = await fetch("https://backendrafik.onrender.com/clients");
       if (response.ok) {
         const data = await response.json();
         setClients(data.data); // Les données sont dans data.data selon votre API
@@ -115,7 +115,7 @@ const ListeClient = () => {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://api.trendybox-dz.com/client/${updatedClient.id}`, {
+      const response = await fetch(`https://backendrafik.onrender.com/client/${updatedClient.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +143,7 @@ const ListeClient = () => {
   const handleDeleteClient = async () => {
     if (selectedClient) {
       try {
-        const response = await fetch(`https://api.trendybox-dz.com/Client/${selectedClient.id}`, {
+        const response = await fetch(`https://backendrafik.onrender.com/Client/${selectedClient.id}`, {
           method: "DELETE",
         });
 
