@@ -19,7 +19,7 @@ const Drawer = ({ setPage }) => {
       className={`w-5 h-5 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
       fill="none"
       stroke="currentColor"
-      viewBox="0 0 24 24"
+      view  viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -71,7 +71,7 @@ const Drawer = ({ setPage }) => {
     </svg>
   );
 
-  const AddChiffreicon = ({ isActive }) => (
+  const AddChiffreIcon = ({ isActive }) => (
     <svg
       className={`w-6 h-6 transition-colors duration-300 ${isActive ? "text-white" : "text-gray-500 dark:text-gray-400"}`}
       fill="currentColor"
@@ -130,14 +130,34 @@ const Drawer = ({ setPage }) => {
     </svg>
   );
 
+  const SupplierListIcon = ({ isActive }) => (
+    <svg
+      className={`w-6 h-6 transition-colors duration-300 ${isActive ? "text-white" : "text-gray-500 dark:text-gray-400"}`}
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M7 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-2 13a5 5 0 0 1 10 0H5zm8-13a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
+    </svg>
+  );
+
+  const AddSupplierIcon = ({ isActive }) => (
+    <svg
+      className={`w-6 h-6 transition-colors duration-300 ${isActive ? "text-white" : "text-gray-500 dark:text-gray-400"}`}
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M7 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-2 13a5 5 0 0 1 10 0H5zm8-13a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm2 5h2v2h2v2h-2v2h-2v-2h-2V9h2z" />
+    </svg>
+  );
+
   return (
     <div
       style={{ height: "calc(100vh - 80px)" }}
       id="drawer-navigation"
       className="z-40 h-screen border-r border-gray-300 dark:border-gray-600 p-4 overflow-y-auto w-[300px] bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900"
     >
-      
-
       <ul className="space-y-4 font-medium">
         {/* Categories Section */}
         <li>
@@ -245,7 +265,7 @@ const Drawer = ({ setPage }) => {
           </div>
         </li>
 
-        {/* Clients Section */}
+        {/* Clients Ditails Section */}
         <li>
           <div
             className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-300 ${
@@ -293,6 +313,59 @@ const Drawer = ({ setPage }) => {
               >
                 <AddClientIcon isActive={activePage === 8} />
                 <span className="ml-3 font-medium">Ajouter Client</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        {/* Suppliers Section */}
+        <li>
+          <div
+            className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+              expandedSection === "suppliers"
+                ? "bg-[#070c2b] text-white shadow-md"
+                : "text-gray-900 dark:text-gray-300 hover:bg-blue-200 dark:hover:bg-blue-700"
+            }`}
+            onClick={() => toggleSection("suppliers")}
+          >
+            <div className="flex items-center">
+              <SupplierListIcon isActive={expandedSection === "suppliers"} />
+              <span className="ml-3 font-bold text-lg">Fournisseurs</span>
+              {(activePage === 9 || activePage === 10) && (
+                <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full"></span>
+              )}
+            </div>
+            <ChevronIcon isOpen={expandedSection === "suppliers"} />
+          </div>
+          <div
+            className={`transition-all duration-300 ease-in-out ${
+              expandedSection === "suppliers"
+                ? "max-h-96 opacity-100 bg-blue-50 dark:bg-gray-800 py-2"
+                : "max-h-0 opacity-0 overflow-hidden"
+            }`}
+          >
+            <ul className="pl-8 space-y-2">
+              <li
+                className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                  activePage === 9
+                    ? "bg-[#070c2b] text-white border-l-4 border-blue-500 shadow-md"
+                    : "hover:bg-blue-100 dark:hover:bg-blue-800"
+                }`}
+                onClick={() => handleSetPage(9)}
+              >
+                <SupplierListIcon isActive={activePage === 9} />
+                <span className="ml-3 font-medium">Liste Fournisseurs</span>
+              </li>
+              <li
+                className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                  activePage === 10
+                    ? "bg-[#070c2b] text-white border-l-4 border-blue-500 shadow-md"
+                    : "hover:bg-blue-100 dark:hover:bg-blue-800"
+                }`}
+                onClick={() => handleSetPage(10)}
+              >
+                <AddSupplierIcon isActive={activePage === 10} />
+                <span className="ml-3 font-medium">Ajouter Fournisseur</span>
               </li>
             </ul>
           </div>
@@ -360,7 +433,7 @@ const Drawer = ({ setPage }) => {
           }`}
           onClick={() => handleSetPage(6)}
         >
-          <AddChiffreicon isActive={activePage === 6} />
+          <AddChiffreIcon isActive={activePage === 6} />
           <span className="ml-3 font-medium">Chiffre d'Affaire</span>
         </li>
       </ul>
