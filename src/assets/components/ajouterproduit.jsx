@@ -11,9 +11,8 @@ const AjouterProduit = () => {
     reference: "",
     images: [],
     categorie_id: "",
-    fournisseur: "", // New field
-    client: "",      // New field
-    etat: "local"    // New field with default value
+    fournisseur_id: "", // Changed from fournisseur to fournisseur_id    // Changed from client to client_id
+    etat: "local"
   });
 
   // Static options for etat select
@@ -29,6 +28,13 @@ const AjouterProduit = () => {
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [categorySearch, setCategorySearch] = useState("");
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+
+  // Fournisseurs state and handlers
+  const [fournisseurs, setFournisseurs] = useState([]);
+  const [filteredFournisseurs, setFilteredFournisseurs] = useState([]);
+  const [fournisseurSearch, setFournisseurSearch] = useState("");
+  const [isFournisseurDropdownOpen, setIsFournisseurDropdownOpen] = useState(false);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -49,6 +55,27 @@ const AjouterProduit = () => {
     fetchCategories();
   }, []);
 
+  // Fetch fournisseurs
+  useEffect(() => {
+    const fetchFournisseurs = async () => {
+      try {
+        const response = await fetch("https://api.trendybox-dz.com/fournisseurs");
+        if (response.ok) {
+          const data = await response.json();
+          const sortedFournisseurs = data.data.sort((a, b) => 
+            a.nom.localeCompare(b.nom, 'fr', { sensitivity: 'base' })
+          );
+          setFournisseurs(sortedFournisseurs);
+          setFilteredFournisseurs(sortedFournisseurs);
+        }
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des fournisseurs.");
+      }
+    };
+    fetchFournisseurs();
+  }, []);
+  
+
     // Filter categories based on search input
     useEffect(() => {
       if (categorySearch.trim() === "") {
@@ -61,6 +88,18 @@ const AjouterProduit = () => {
       }
     }, [categorySearch, categories]);
   
+  // Filter fournisseurs
+  useEffect(() => {
+    if (fournisseurSearch.trim() === "") {
+      setFilteredFournisseurs(fournisseurs);
+    } else {
+      const filtered = fournisseurs.filter(fournisseur =>
+        fournisseur.nom.toLowerCase().includes(fournisseurSearch.toLowerCase())
+      );
+      setFilteredFournisseurs(filtered);
+    }
+  }, [fournisseurSearch, fournisseurs]);
+
     const handleCategorySelect = (categoryId, categoryName) => {
       setProduit(prev => ({
         ...prev,
@@ -68,6 +107,15 @@ const AjouterProduit = () => {
       }));
       setCategorySearch(categoryName);
       setIsCategoryDropdownOpen(false);
+    };
+
+    const handleFournisseurSelect = (fournisseurId, fournisseurName) => {
+      setProduit(prev => ({
+        ...prev,
+        fournisseur_id: fournisseurId
+      }));
+      setFournisseurSearch(fournisseurName);
+      setIsFournisseurDropdownOpen(false);
     };
 
   const handleChange = (event) => {
@@ -148,7 +196,6 @@ const AjouterProduit = () => {
         images: [],
         categorie_id: "",
         fournisseur: "", // Reset fournisseur
-        client: "",     // Reset client
         etat: "local"   // Reset etat to default
       });
       setImagePreviews([]);
@@ -315,33 +362,46 @@ const AjouterProduit = () => {
             </div>
 
             {/* Fournisseur */}
-            <div>
-              <label htmlFor="fournisseur" className="block mb-2 text-sm font-medium text-gray-900">
+            <div className="relative">
+              <label htmlFor="fournisseurSearch" className="block mb-2 text-sm font-medium text-gray-900">
                 Fournisseur
               </label>
-              <input
-                type="text"
-                id="fournisseur"
-                value={produit.fournisseur}
-                onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Nom du fournisseur"
-              />
-            </div>
-
-            {/* Client */}
-            <div>
-              <label htmlFor="client" className="block mb-2 text-sm font-medium text-gray-900">
-                Client
-              </label>
-              <input
-                type="text"
-                id="client"
-                value={produit.client}
-                onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Nom du client"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  id="fournisseurSearch"
+                  value={fournisseurSearch}
+                  onChange={(e) => {
+                    setFournisseurSearch(e.target.value);
+                    setIsFournisseurDropdownOpen(true);
+                  }}
+                  onFocus={() => setIsFournisseurDropdownOpen(true)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  placeholder="Rechercher un fournisseur"
+                />
+                <input
+                  type="hidden"
+                  id="fournisseur_id"
+                  value={produit.fournisseur_id}
+                />
+                {isFournisseurDropdownOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {filteredFournisseurs.length > 0 ? (
+                      filteredFournisseurs.map((item) => (
+                        <div
+                          key={item.id}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => handleFournisseurSelect(item.id, item.nom)}
+                        >
+                          {item.nom}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">Aucun fournisseur trouvé</div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* État */}
