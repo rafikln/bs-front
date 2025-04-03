@@ -166,8 +166,7 @@ const AjouterProduit = () => {
       formData.append("quantite", produit.quantite);
       formData.append("reference", produit.reference.trim());
       formData.append("categorie_id", produit.categorie_id);
-      formData.append("fournisseur", produit.fournisseur.trim()); // Add fournisseur
-      formData.append("client", produit.client.trim());           // Add client
+      formData.append("fournisseur", produit.fournisseur_id); // Add fournisseur         // Add client
       formData.append("etat", produit.etat);                     // Add etat
 
       // Renommer et ajouter les images
