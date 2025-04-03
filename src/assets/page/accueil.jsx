@@ -11,8 +11,10 @@ import ListeProduit from "../components/listeproduit.jsx";
 import AjouterFacture from "../components/ajouterfacture.jsx";
 import ListeFacture from "../components/listefacture.jsx";
 import FactureProforma from "../components/factureProforma.jsx";
-import ListeClient from "../components/listeclient.jsx"; // Imported ListeClient
-import AjouterClient from "../components/ajouterclient.jsx"; // Imported AjouterClient
+import ListeClient from "../components/listeclient.jsx";
+import AjouterClient from "../components/ajouterclient.jsx";
+import ListeFour from "../components/listefour.jsx";
+import AjouterFour from "../components/ajouterfour.jsx";
 import toast from "react-hot-toast";
 
 function Accueil({ tokens, setTokens }) {
@@ -26,6 +28,7 @@ function Accueil({ tokens, setTokens }) {
   const [liste, setListe] = useState([]); // Catégories
   const [listproduit, setListeproduit] = useState([]); // Produits
   const [clients, setClients] = useState([]); // Clients
+  const [fournisseurs, setFournisseurs] = useState([]); // Fournisseurs
   const [page, setPage] = useState(0); // Gestion de la page active
   const [isDrawerOpen, setIsDrawerOpen] = useState(true); // Gestion de la visibilité du drawer
 
@@ -65,11 +68,63 @@ function Accueil({ tokens, setTokens }) {
   // Charger les clients
   useEffect(() => {
     fetchData(
+<<<<<<< HEAD
       "https://backendrafik.onrender.com/ClientAll", // Replace with actual endpoint if different
+=======
+      "https://api.trendybox-dz.com/ClientAll",
+>>>>>>> 446b95634d54c762883d5ba4e3bd88e3bf0a1d74
       setClients,
       "Erreur lors de la récupération des clients."
     );
   }, []);
+
+  // Charger les fournisseurs
+  useEffect(() => {
+    fetchData(
+      "https://api.trendybox-dz.com/Fournisseurs",
+      setFournisseurs,
+      "Erreur lors de la récupération des fournisseurs."
+    );
+  }, []);
+
+  // Rendu conditionnel des pages
+  const renderPage = () => {
+    switch (page) {
+      case 0:
+        return <ListeCat liste={liste} setListe={setListe} />;
+      case 1:
+        return <AjouterCat fetchData={fetchData} />;
+      case 2:
+        return <ListeProduit produits={listproduit} />;
+      case 3:
+        return <AjouterProduit liste={liste} fetchData={fetchData} />;
+      case 4:
+        return <AjouterFacture listproduit={listproduit} liste={liste} />;
+      case 5:
+        return <ListeFacture />;
+      case 6:
+        return <FactureProforma />;
+      case 7:
+        return <ListeClient clients={clients} setClients={setClients} />;
+      case 8:
+        return <AjouterClient fetchData={fetchData} />;
+      case 9:
+        return <ListeFour fournisseurs={fournisseurs} setFournisseurs={setFournisseurs} />;
+      case 10:
+        return <AjouterFour fetchData={fetchData} />;
+      default:
+        return (
+          <div className="flex-1 p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Bienvenue sur votre tableau de bord
+            </h1>
+            <p className="text-lg text-gray-700 dark:text-gray-300">
+              Utilisez le menu à gauche pour gérer vos catégories, produits, clients, fournisseurs, factures et plus encore.
+            </p>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="w-full h-[100vh]">
@@ -109,16 +164,8 @@ function Accueil({ tokens, setTokens }) {
             </button>
           )}
 
-          {/* Rendu conditionnel des composants */}
-          {page === 0 && <ListeCat liste={liste} setListe={setListe} />}
-          {page === 1 && <AjouterCat fetchData={fetchData} />}
-          {page === 2 && <ListeProduit produits={listproduit} />}
-          {page === 3 && <AjouterProduit liste={liste} fetchData={fetchData} />}
-          {page === 4 && <AjouterFacture listproduit={listproduit} liste={liste} />}
-          {page === 5 && <ListeFacture />}
-          {page === 6 && <FactureProforma />}
-          {page === 7 && <ListeClient clients={clients} setClients={setClients} />}
-          {page === 8 && <AjouterClient fetchData={fetchData} />}
+          {/* Rendu des pages */}
+          {renderPage()}
         </div>
       </div>
     </div>
